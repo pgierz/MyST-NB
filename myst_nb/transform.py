@@ -12,6 +12,9 @@ from jupyter_sphinx.utils import sphinx_abs_dir
 from .parser import CellOutputBundleNode
 from sphinx.environment.collectors.asset import ImageCollector
 
+# PG: Add the docx things:
+from docxbuilder import setup as docx_setup
+
 logger = logging.getLogger(__name__)
 
 WIDGET_VIEW_MIMETYPE = "application/vnd.jupyter.widget-view+json"
@@ -27,6 +30,8 @@ RENDER_PRIORITY = {
         "text/plain",
     ],
     "latex": ["text/latex", "text/plain"],
+    # PG: Not sure about this...
+    "docx": ["text/plain"]
 }
 RENDER_PRIORITY["readthedocs"] = RENDER_PRIORITY["html"]
 
@@ -35,6 +40,10 @@ class CellOutputsToNodes(SphinxTransform):
     """Use the builder context to transform a CellOutputNode into Sphinx nodes."""
 
     default_priority = 700
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # docx_setup(self.app)
 
     def apply(self):
         builder = self.app.builder.name
